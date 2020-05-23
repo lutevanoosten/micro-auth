@@ -8,28 +8,21 @@ import java.nio.charset.StandardCharsets;
 public class Sender {
 
     private final static String QUEUE_NAME = "hello";
-    private final static String QUEUE_NAME2 = "ass";
+
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            String message = "Hello World!";
-            channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
+            channel.exchangeDeclare(QUEUE_NAME, "fanout");
+
+            String message = argv.length < 1 ? "info: Hello World!" :
+                    String.join(" ", argv);
+
+            channel.basicPublish(QUEUE_NAME, "", null, message.getBytes("UTF-8"));
             System.out.println(" [x] Sent '" + message + "'");
         }
-
-        try (Connection connection = factory.newConnection();
-             Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME2, false, false, false, null);
-            String message = "Hello Ass!";
-            channel.basicPublish("", QUEUE_NAME2, null, message.getBytes(StandardCharsets.UTF_8));
-            System.out.println(" [x] Sent '" + message + "'");
-        }
-
-
 
     }
 }

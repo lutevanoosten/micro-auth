@@ -17,14 +17,17 @@ public class Receiver {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.exchangeDeclare(QUEUE_NAME, "fanout");
+        String queueName = channel.queueDeclare().getQueue();
+        channel.queueBind(queueName, QUEUE_NAME, "");
+
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), "UTF-8");
             System.out.println(" [x] Received '" + message + "'");
         };
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
+        channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
     }
 
 }
