@@ -7,21 +7,24 @@ import java.nio.charset.StandardCharsets;
 
 public class Sender {
 
-    private final static String QUEUE_NAME = "hello";
+    private final static String QUEUE_NAME = "Returned_token";
 
 
-    public static void main(String[] argv) throws Exception {
+   // public static void main(String[] argv) throws Exception {
+
+
+
+
+    //}
+
+    public void returnToken(String token) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            String message = "Hello World!";
-            channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-            System.out.println(" [x] Sent '" + message + "'");
+            channel.basicPublish("", QUEUE_NAME, null, token.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Sent '" + token + "'");
         }
-
-
-
     }
 }

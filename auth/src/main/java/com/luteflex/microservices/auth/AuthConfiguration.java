@@ -5,6 +5,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 
 import com.luteflex.microservices.auth.Models.TokenRequest;
+import com.luteflex.microservices.auth.rabbitmq.Sender;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
@@ -14,34 +15,14 @@ import io.jsonwebtoken.Claims;
 
 public class AuthConfiguration {
 
-    private int maximum;
-    private int minimum;
-    //no-argument constructor
-    public AuthConfiguration()
-    {
-    }
-    //generating getters
-    public int getMaximum()
-    {
-        return maximum;
-    }
-    public int getMinimum()
-    {
-        return minimum;
-    }
+    Sender sender = new Sender();
 
-    //genetrating constructor using fields
-    public AuthConfiguration(int maximum, int minimum)
-    {
-        super();
-        this.maximum = maximum;
-        this.minimum = minimum;
-    }
+
 
 
     private static String SECRET_KEY = "oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd9jo1QTy4b7P9Ze5_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGhXEbdJI-ZQ19k_o9MI0y3eZN2lp9jow55FfXMiINEdt1XR85VipRLSOkT6kSpzs2x-jbLDiz9iFVzkd81YKxMgPA7VfZeQUm4n-mOmnWMaVX30zGFU4L3oPBctYKkl4dYfqYWqRNfrgPJVi5DGFjywgxx0ASEiJHtV72paI3fDR2XwlSkyhhmY-ICjCRmsJN4fX1pdoL8a18-aQrvyu4j0Os6dVPYIoPvvY0SAZtWYKHfM15g7A3HD4cVREf9cUsprCRK93w";
 
-    public void createJWT(TokenRequest tokenRequest) {
+    public void createJWT(TokenRequest tokenRequest) throws Exception {
         long ttlMillis = 3600000;
 
         //The JWT signature algorithm we will be using to sign the token
@@ -64,15 +45,12 @@ public class AuthConfiguration {
                 .claim("name", tokenRequest.getName())
                 .signWith(signatureAlgorithm, signingKey);
 
-        //if it has been specified, let's add the expiration
-        if (ttlMillis > 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }
+        long expMillis = nowMillis + ttlMillis;
+        Date exp = new Date(expMillis);
+        builder.setExpiration(exp);
 
         //Builds the JWT and serializes it to a compact, URL-safe string
         System.out.print("the token:" + builder.compact());
-        //return builder.compact();
+        sender.returnToken(builder.compact());
     }
 }
