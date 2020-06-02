@@ -8,6 +8,6 @@ public class AuthConfigurationController {
     @GetMapping("/createJwt")
     public AuthConfiguration retriveLimitsFromConfigurations()
     {
-        return new AuthConfiguration(1000, 1);
+        return null;
     }
 }

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Sender {
 
-    private final static String QUEUE_NAME = "Returned_token";
+    //private final static String QUEUE_NAME = "Returned_token";
 
 
    // public static void main(String[] argv) throws Exception {
@@ -17,7 +17,7 @@ public class Sender {
 
     //}
 
-    public void returnToken(String token) throws Exception {
+    public void returnToken(String token, String QUEUE_NAME) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();

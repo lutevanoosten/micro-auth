@@ -29,7 +29,11 @@ public class Receiver {
             String message = new String(delivery.getBody(), "UTF-8");
             System.out.println(" [x] Received request'" + message + "'");
             TokenRequest tokenRequest = new ObjectMapper().readValue(message, TokenRequest.class);
-            authConfiguration.createJWT(tokenRequest);
+            try {
+                authConfiguration.createJWT(tokenRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         };
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
     }

@@ -51,6 +51,6 @@ public class AuthConfiguration {
 
         //Builds the JWT and serializes it to a compact, URL-safe string
         System.out.print("the token:" + builder.compact());
-        sender.returnToken(builder.compact());
+        sender.returnToken(builder.compact(), tokenRequest.getName());
     }
 }
