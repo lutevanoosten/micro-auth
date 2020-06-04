@@ -18,13 +18,16 @@ public class Sender {
     //}
 
     public void returnToken(String token, String QUEUE_NAME) throws Exception {
+        System.out.print("here right now");
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
+
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             channel.basicPublish("", QUEUE_NAME, null, token.getBytes(StandardCharsets.UTF_8));
             System.out.println(" [x] Sent '" + token + "'");
         }
+
     }
 }

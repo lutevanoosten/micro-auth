@@ -40,7 +40,7 @@ public class AuthConfiguration {
                 .setIssuedAt(now)
                 .setSubject("Authentication token")
                 .setIssuer("Luteflex")
-                .claim("role", tokenRequest.getRole())
+                .claim("role", "admin")
                 .claim("avatar", tokenRequest.getAvatar())
                 .claim("name", tokenRequest.getName())
                 .signWith(signatureAlgorithm, signingKey);
